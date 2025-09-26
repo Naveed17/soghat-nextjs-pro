@@ -1,7 +1,7 @@
 import { Skeleton, Stack, Grid2, Box } from '@mui/material';
 
 export function BannerSkeleton() {
-  return <Skeleton variant="rectangular" height={{ xs: 300, md: 380 }} sx={{ borderRadius: 3 }} />;
+  return <Skeleton variant="rectangular" sx={{ borderRadius: 3, height: { xs: 300, md: 380 } }} />;
 }
 
 export function CategorySkeleton() {

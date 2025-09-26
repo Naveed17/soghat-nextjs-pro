@@ -39,14 +39,15 @@ const fetchData = cache(async ({ slug, searchParams }: { slug: string[], searchP
     return null;
 })
 
-async function ListingProducts({ params, searchParams }: { params: Promise<{ slug: string[] }>, searchParams?: { [key: string]: string | undefined } }): Promise<React.JSX.Element> {
+async function ListingProducts({ params, searchParams }: { params: Promise<{ slug: string[] }>, searchParams?: Promise<{ [key: string]: string | undefined }> }): Promise<React.JSX.Element> {
     const { slug } = await params;
+    const resolvedSearchParams = searchParams ? await searchParams : undefined;
 
     if (!slug) {
         notFound();
     }
 
-    const data = await fetchData({ slug, searchParams });
+    const data = await fetchData({ slug, searchParams: resolvedSearchParams });
     if (!data || !data.products || data.products.length === 0) {
         notFound();
     }
@@ -75,10 +76,11 @@ function PaginationWrapper({ pagination }: { pagination: any }) {
         </Stack>
     );
 }
-async function ListingPage({ params, searchParams }: { params: Promise<{ slug: string[] }>, searchParams?: { [key: string]: string | undefined } }) {
+async function ListingPage({ params, searchParams }: { params: Promise<{ slug: string[] }>, searchParams?: Promise<{ [key: string]: string | undefined }> }) {
     const { slug } = await params;
+    const resolvedSearchParams = searchParams ? await searchParams : undefined;
     return (
-        <Suspense key={JSON.stringify({ slug, searchParams })} fallback={
+        <Suspense key={JSON.stringify({ slug, searchParams: resolvedSearchParams })} fallback={
             <Stack>
                 <Grid2 container spacing={2}>
                     {[...Array(12)].map((_, index) => (

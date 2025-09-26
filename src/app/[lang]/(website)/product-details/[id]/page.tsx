@@ -9,25 +9,6 @@ import { Metadata, ResolvingMetadata } from 'next';
 import { getImageUrl } from '@src/utils/getImageUrl';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
-export const generateStaticParams = async () => {
-    try {
-        const result = await fetchAllProducts();
-
-        if (!result || !result.data || !Array.isArray(result.data) || result.data.length === 0) {
-            console.warn('No products found.');
-            return [];
-        }
-
-        const { data: response } = result;
-
-        return response
-            .map(({ id }: { id: number }) => ({ id: `${id}` }))
-            .slice(0, 10);
-    } catch (error) {
-        console.error('Error generating static params:', error);
-        return [];
-    }
-};
 
 export const generateMetadata = async ({ params }: { params: Promise<{ id: string }> }, parent: ResolvingMetadata): Promise<Metadata> => {
     const { id } = await params;

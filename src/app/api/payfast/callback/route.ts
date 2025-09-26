@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     const PaRes = params.get("PaRes");
     if (!PaRes) throw new Error("Missing PaRes parameter.");
 
-    const value = cookies().get("customer_validate")?.value;
+    const value = (await cookies()).get("customer_validate")?.value;
     if (!value) throw new Error("Missing customer validation cookie.");
 
     let customer;
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     const payload = { ...customer, data_3ds_pares: PaRes };
 
     // Delete the cookie safely
-    cookies().set("customer_validate", "", {
+    (await cookies()).set("customer_validate", "", {
       httpOnly: true,
       secure: true,
       sameSite: "none",
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     }
 
     const { status, message, ...rest } = data;
-    cookies().set(
+    (await cookies()).set(
       "success_transaction",
       JSON.stringify({ ...rest.payment_details }),
       {
